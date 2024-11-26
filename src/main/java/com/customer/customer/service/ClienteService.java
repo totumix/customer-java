@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class ClienteService {
@@ -37,21 +39,39 @@ public class ClienteService {
     public ClienteEstadisticas getCantidadClientesYPromedioEdad() {
         List<Cliente> clientes = clienteRepository.findAll();
 
-        // Contamos la cantidad de clientes
         long cantidadClientes = clientes.size();
 
-        // Calculamos el promedio de edad
         double promedioEdad = clientes.stream()
-                .mapToInt(c -> calcularEdad(c.getFechaNacimiento()))
+                .mapToInt(this::calcularEdad)
                 .average()
                 .orElse(0);
 
         return new ClienteEstadisticas(cantidadClientes, promedioEdad);
     }
 
-    // Calcula la edad en años a partir de la fecha de nacimiento
-    private int calcularEdad(LocalDate fechaNacimiento) {
-        LocalDate today = LocalDate.now();
-        return Period.between(fechaNacimiento, today).getYears();
+
+    public int calcularEdad(Cliente cliente) {
+        if (cliente.getFechaNacimiento() != null) {
+            LocalDate today = LocalDate.now();
+            return Period.between(cliente.getFechaNacimiento(), today).getYears();
+        }
+        return 0;
+    }
+
+    public int obtenerEdadPorCorreo(String correo) {
+
+        List<Cliente> clientes = clienteRepository.findAll();
+
+        Optional<Cliente> clienteOptional = clientes.stream()
+                .filter(cliente -> cliente.getCorreoElectronico().equals(correo))
+                .findFirst();
+
+        if (clienteOptional.isPresent()) {
+            Cliente cliente = clienteOptional.get();
+            Function<Cliente, Integer> obtenerEdad = this::calcularEdad;
+            return obtenerEdad.apply(cliente);
+        } else {
+            throw new RuntimeException("Cliente no encontrado");
+        }
     }
 }
