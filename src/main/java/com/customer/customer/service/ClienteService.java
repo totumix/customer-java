@@ -51,8 +51,10 @@ public class ClienteService {
 
 
     public int calcularEdad(Cliente cliente) {
+        System.out.println(cliente);
         if (cliente.getFechaNacimiento() != null) {
             LocalDate today = LocalDate.now();
+            System.out.println(today);
             return Period.between(cliente.getFechaNacimiento(), today).getYears();
         }
         return 0;
@@ -65,6 +67,8 @@ public class ClienteService {
         Optional<Cliente> clienteOptional = clientes.stream()
                 .filter(cliente -> cliente.getCorreoElectronico().equals(correo))
                 .findFirst();
+
+        System.out.println((clienteOptional));
 
         if (clienteOptional.isPresent()) {
             Cliente cliente = clienteOptional.get();

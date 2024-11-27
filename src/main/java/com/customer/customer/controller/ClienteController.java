@@ -55,6 +55,7 @@ public class ClienteController {
     @GetMapping("/edad")
     public EdadResponse getEdadCliente(@RequestParam String correo) {
         int edad = clienteService.obtenerEdadPorCorreo(correo);
+        System.out.println(edad);
         return new EdadResponse(edad);
     }
 }

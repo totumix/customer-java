@@ -10,4 +10,21 @@ public class ClienteEstadisticas {
         this.promedioEdad = promedioEdad;
     }
 
+    // Getters
+    public long getCantidadClientes() {
+        return cantidadClientes;
+    }
+
+    public double getPromedioEdad() {
+        return promedioEdad;
+    }
+
+    // Setters
+    public void setCantidadClientes(long cantidadClientes) {
+        this.cantidadClientes = cantidadClientes;
+    }
+
+    public void setPromedioEdad(double promedioEdad) {
+        this.promedioEdad = promedioEdad;
+    }
 }
